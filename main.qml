@@ -89,7 +89,7 @@ Window {
         id: largeModel
         Component.onCompleted: {
             for (var i=0 ; i< goModel.len() ; ++i)
-                largeModel.append({"name":"Person "+i , "age": Math.round(Math.random()*100), "gender": Math.random()>0.5 ? "Male" : "Female"})
+                largeModel.append({name: goModel.get(i).name , age: goModel.get(i).age, gender: goModel.get(i).gender})
         }
     }
 
@@ -113,7 +113,7 @@ Window {
             anchors.margins: margins
 
             Tab {
-                title: "ScrollView55"
+                title: "ScrollView"
 
 		        ScrollView {
 		            ListView {
@@ -128,7 +128,7 @@ Window {
 		                    clip: true
 		                    Text {
 		                        id: txt
-		                        text: goModel.get(index)
+		                        text: goModel.get(index).name +" "+goModel.get(index).age +" "+goModel.get(index).gender
 								color:"White"
 		                    }
 		                    MouseArea {
@@ -285,7 +285,7 @@ Window {
                 title: "TableView"
 
                 TableView {
-                    model: goModel.len()
+                    model: largeModel
                     anchors.margins: 12
                     anchors.fill: parent
                     TableViewColumn {

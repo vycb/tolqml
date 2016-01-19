@@ -35,8 +35,8 @@ func (l *GoModel) Len() int {
 	return len(l.List)
 }
 
-func (g *GoModel) Get(index int) string {
-	return g.List[index].Name + " " + g.List[index].Age + " " + g.List[index].Gender
+func (g *GoModel) Get(index int) GoData {
+	return g.List[index]
 }
 
 func run() error {
@@ -46,7 +46,7 @@ func run() error {
 	var gender string
 	r := rand.New(rand.NewSource(99))
 
-	for i := 0; i < 500; i++ {
+	for i := 0; i < 50; i++ {
 		if r.Float32() > 0.5 {
 			gender = "GoMale"
 		} else {
