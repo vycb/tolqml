@@ -6,7 +6,7 @@ import (
 	"math/rand"
 	"os"
 	"strconv"
-
+	"log"
 	"gopkg.in/qml.v1"
 )
 
@@ -39,6 +39,13 @@ func (g *GoModel) Get(index int) GoData {
 	return g.List[index]
 }
 
+func (g *GoModel) OnAccept(rowid int, columnid int, val string) {
+	var _ = rowid
+	var _ = columnid
+	i := val
+	var _ = i
+}
+
 func run() error {
 	engine := qml.NewEngine()
 
@@ -61,7 +68,7 @@ func run() error {
 
 	controls, err := engine.LoadFile("main.qml")
 	if err != nil {
-		return err
+		log.Println("qml.LoadFile",err)
 	}
 
 	window := controls.CreateWindow(nil)
