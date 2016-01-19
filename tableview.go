@@ -17,14 +17,26 @@ func main() {
 	}
 }
 
-type GoData struct {
-	Name   string
-	Age    string
-	Gender string
+type (
+	GoData struct {
+		Name   string
+		Age    string
+		Gender string
+	}
+	GoModel struct {
+		List []GoData
+	}
+	LModel struct {
+		items []*GoData
+	}
+)
+
+func (l *GoModel) Len() int {
+	return len(l.List)
 }
 
-type GoModel struct {
-	List []GoData
+func (g *GoModel) Get(index int) string {
+	return g.List[index].Name + " " + g.List[index].Age + " " + g.List[index].Gender
 }
 
 func run() error {
@@ -34,7 +46,7 @@ func run() error {
 	var gender string
 	r := rand.New(rand.NewSource(99))
 
-	for i := 0; i < 5; i++ {
+	for i := 0; i < 500; i++ {
 		if r.Float32() > 0.5 {
 			gender = "GoMale"
 		} else {

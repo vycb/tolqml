@@ -65,7 +65,7 @@ Window {
 
         ComboBox {
             id: delegateChooser
-            enabled: frame.currentIndex === 3 ? 1 : 0
+            enabled: frame.currentIndex === 1 ? 1 : 0
             model: delegatemenu
             width: 150
             anchors.left: parent.left
@@ -85,27 +85,10 @@ Window {
     SystemPalette {id: syspal}
     color: syspal.window
 
-    XmlListModel {
-        id: flickerModel
-        source: "http://api.flickr.com/services/feeds/photos_public.gne?format=rss2&tags=" + "Qt"
-        query: "/rss/channel/item"
-        namespaceDeclarations: "declare namespace media=\"http://search.yahoo.com/mrss/\";"
-        XmlRole { name: "title"; query: "title/string()" }
-        XmlRole { name: "imagesource"; query: "media:thumbnail/@url/string()" }
-        XmlRole { name: "credit"; query: "media:credit/string()" }
-    }
-
-    ListModel {
-        id: nestedModel
-        ListElement{content: ListElement { description: "Core" ; color:"#ffaacc"}}
-        ListElement{content: ListElement { description: "Second" ; color:"#ffccaa"}}
-        ListElement{content: ListElement { description: "Third" ; color:"#ffffaa"}}
-    }
-
     ListModel {
         id: largeModel
         Component.onCompleted: {
-            for (var i=0 ; i< 500 ; ++i)
+            for (var i=0 ; i< goModel.len() ; ++i)
                 largeModel.append({"name":"Person "+i , "age": Math.round(Math.random()*100), "gender": Math.random()>0.5 ? "Male" : "Female"})
         }
     }
@@ -130,106 +113,32 @@ Window {
             anchors.margins: margins
 
             Tab {
-                title: "XmlListModel"
+                title: "ScrollView55"
 
-                TableView {
-                    model: flickerModel
-                    anchors.fill: parent
-                    anchors.margins: 12
-
-                    TableViewColumn {
-                        role: "title"
-                        title: "Title"
-                        width: 120
-                    }
-                    TableViewColumn {
-                        role: "credit"
-                        title: "Credit"
-                        width: 120
-                    }
-                    TableViewColumn {
-                        role: "imagesource"
-                        title: "Image source"
-                        width: 200
-                        visible: true
-                    }
-
-                    frameVisible: frameCheckbox.checked
-                    headerVisible: headerCheckbox.checked
-                    sortIndicatorVisible: sortableCheckbox.checked
-                    alternatingRowColors: alternateCheckbox.checked
-                }
+		        ScrollView {
+		            ListView {
+		                id: lv
+		                model: goModel.len()
+		                height: contentHeight
+		                delegate: Rectangle {
+		                    id: item
+		                    color: lv.currentIndex == index ? "#011039" : "#1b1b1b"
+		                    width: Math.max(txt.width, parent.width)
+		                    height: txt.height
+		                    clip: true
+		                    Text {
+		                        id: txt
+		                        text: goModel.get(index)
+								color:"White"
+		                    }
+		                    MouseArea {
+		                        anchors.fill: parent
+		                        onClicked: lv.currentIndex = index
+		                    }
+		                }
+		            }
+		        }
             }
-            Tab {
-                title: "Multivalue"
-
-                TableView {
-                    model: nestedModel
-                    anchors.fill: parent
-                    anchors.margins: 12
-
-                    TableViewColumn {
-                        role: "content"
-                        title: "Text and Color"
-                        width: 220
-                    }
-
-                    itemDelegate: Item {
-                        Rectangle{
-                            color: styleData.value.get(0).color
-                            anchors.top:parent.top
-                            anchors.right:parent.right
-                            anchors.bottom:parent.bottom
-                            anchors.margins: 4
-                            width:32
-                            border.color:"#666"
-                        }
-                        Text {
-                            width: parent.width
-                            anchors.margins: 4
-                            anchors.left: parent.left
-                            anchors.verticalCenter: parent.verticalCenter
-                            elide: styleData.elideMode
-                            text: styleData.value.get(0).description
-                            color: styleData.textColor
-                        }
-                    }
-
-                    frameVisible: frameCheckbox.checked
-                    headerVisible: headerCheckbox.checked
-                    sortIndicatorVisible: sortableCheckbox.checked
-                    alternatingRowColors: alternateCheckbox.checked
-                }
-            }
-            Tab {
-                title: "Generated"
-
-                TableView {
-                    model: goModel.List
-                    anchors.margins: 12
-                    anchors.fill: parent
-                    TableViewColumn {
-                        role: "Name"
-                        title: "Name"
-                        width: 120
-                    }
-                    TableViewColumn {
-                        role: "Age"
-                        title: "Age"
-                        width: 120
-                    }
-                    TableViewColumn {
-                        role: "Gender"
-                        title: "Gender"
-                        width: 120
-                    }
-                    frameVisible: frameCheckbox.checked
-                    headerVisible: headerCheckbox.checked
-                    sortIndicatorVisible: sortableCheckbox.checked
-                    alternatingRowColors: alternateCheckbox.checked
-                }
-            }
-
             Tab {
                 title: "Delegates"
                 Item {
@@ -370,6 +279,34 @@ Window {
                                 return delegate1;
                         }
                     }
+                }
+            }
+			Tab {
+                title: "TableView"
+
+                TableView {
+                    model: goModel.len()
+                    anchors.margins: 12
+                    anchors.fill: parent
+                    TableViewColumn {
+                        role: "name"
+                        title: "Name"
+                        width: 120
+                    }
+                    TableViewColumn {
+                        role: "age"
+                        title: "Age"
+                        width: 120
+                    }
+                    TableViewColumn {
+                        role: "gender"
+                        title: "Gender"
+                        width: 120
+                    }
+                    frameVisible: frameCheckbox.checked
+                    headerVisible: headerCheckbox.checked
+                    sortIndicatorVisible: sortableCheckbox.checked
+                    alternatingRowColors: alternateCheckbox.checked
                 }
             }
         }
